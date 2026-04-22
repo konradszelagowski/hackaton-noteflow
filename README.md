@@ -1,32 +1,39 @@
-# Note Flow — Demo Resources
+# NoteFlow
 
-A small collection of links and instructions used during the Note Flow demo.
+A modern, feature-rich note-taking application built with React, TypeScript, Vite, and TailwindCSS. Supports multiple notebooks, tags, dark mode, rich text editing, and is available in English, French, and Italian.
 
-## Live demo
+## 🌐 Live Application
 
-https://rafyac.github.io/noteflow-demo/
+**https://konradszelagowski.github.io/hackaton-noteflow/**
+
+## Features
+
+- 📓 Multiple notebooks with rename/delete
+- 🏷️ Tag-based organisation
+- 🌙 Dark mode
+- 🔍 Full-text search (Ctrl+F)
+- 📝 Rich text editor (Tiptap) — bold, italic, headings, lists, code blocks, task lists
+- 🌍 Multilingual UI — English, French, Italian
+- 📤 Export notes as Markdown or plain text
+- 🗑️ Trash with auto-purge
+
+## Tech Stack
+
+- **React 19** + TypeScript
+- **Vite 8** + TailwindCSS 4
+- **Tiptap** (rich text editor)
+- **Zustand** (state management)
+- **react-i18next** (i18n)
+
+## Development
+
+```bash
+cd noteflow
+npm install
+npm run dev
+```
 
 ## Resources
 
-- **PRD / Product requirements (build reference):** https://gist.github.com/rafyac/362813b2f061058721619ae7f322566c
-- **Instructions / Demo runbook:** https://gist.github.com/rafyac/0b4c18b8cf143975b5325c4e9d03aa0a
-
-## Screenshot
-
-> [Demo App](https://rafyac.github.io/noteflow-demo/)
-> <img width="2363" height="1352" alt="image" src="https://github.com/user-attachments/assets/c540caaa-b117-44f3-aa3a-2c59019a18ed" />
-
-
-## What’s in this repo?
-
-This repo is intentionally lightweight—think of it as a landing page pointing to the most up-to-date demo materials (hosted in the gists above).
-
-## How to use
-
-1. Start with the **PRD / Product requirements** to understand what you’re building.
-2. Follow the **Instructions / Demo runbook** to set up and run the demo end-to-end.
-
-## Updating these materials
-
-1. Update the relevant gist(s) first.
-2. Then update this README if any links or descriptions need to change.
+- **PRD / Product requirements:** https://gist.github.com/rafyac/362813b2f061058721619ae7f322566c
+- **Demo runbook:** https://gist.github.com/rafyac/0b4c18b8cf143975b5325c4e9d03aa0a
