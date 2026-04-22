@@ -37,7 +37,7 @@ export function createSampleData(): { notebooks: Notebook[], notes: Note[] } {
         id: crypto.randomUUID(),
         notebookId,
         title: 'Tips & Tricks',
-        content: '<h2>Keyboard Shortcuts</h2><ul><li><strong>Ctrl+N</strong> — New note</li><li><strong>Ctrl+Shift+N</strong> — New notebook</li><li><strong>Ctrl+F</strong> — Focus search</li></ul><h2>Organization</h2><p>Use <strong>tags</strong> to cross-reference notes across notebooks. Click any tag in the sidebar to filter all notes with that tag.</p><blockquote><p>💡 Tip: Pin your most important notes so they always appear at the top of the list.</p></blockquote>',
+        content: '<h2>Keyboard Shortcuts</h2><ul><li><strong>Alt+N</strong> — New note</li><li><strong>Alt+Shift+N</strong> — New notebook</li><li><strong>Ctrl+F</strong> — Focus search</li></ul><h2>Organization</h2><p>Use <strong>tags</strong> to cross-reference notes across notebooks. Click any tag in the sidebar to filter all notes with that tag.</p><blockquote><p>💡 Tip: Pin your most important notes so they always appear at the top of the list.</p></blockquote>',
         tags: ['tips', 'shortcuts'],
         pinned: false,
         deleted: false,

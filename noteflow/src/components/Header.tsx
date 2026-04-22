@@ -25,12 +25,12 @@ export default function Header() {
         searchRef.current?.focus();
         searchRef.current?.select();
       }
-      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'n') {
+      if (e.altKey && !e.shiftKey && e.key === 'n') {
         e.preventDefault();
         const id = createNote(notebooks[0]?.id);
         setSelectedNote(id);
       }
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'N') {
+      if (e.altKey && e.shiftKey && e.key === 'N') {
         e.preventDefault();
         createNotebook();
       }
