@@ -12,7 +12,7 @@ i18n
     supportedLngs: ['en', 'fr', 'it'],
     ns: ['common'],
     defaultNS: 'common',
-    backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
+    backend: { loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json` },
     interpolation: { escapeValue: false },
     react: { useSuspense: true },
   });
