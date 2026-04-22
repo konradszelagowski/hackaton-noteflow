@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import useNotesStore from '../store/useNotesStore';
 import type { AppView } from '../types';
 
 export default function Sidebar() {
+  const { t } = useTranslation();
   const notebooks = useNotesStore(s => s.notebooks);
   const currentView = useNotesStore(s => s.currentView);
   const createNotebook = useNotesStore(s => s.createNotebook);
@@ -48,12 +50,12 @@ export default function Sidebar() {
 
   const handleNewNotebook = () => {
     const id = createNotebook();
-    startRename(id, 'Untitled Notebook');
+    startRename(id, t('untitledNotebook'));
     navigate({ type: 'notebook', notebookId: id });
   };
 
   const handleDeleteNotebook = (id: string, name: string) => {
-    if (confirm(`Delete notebook "${name}"? All notes will be moved to Trash.`)) {
+    if (confirm(t('confirmDeleteNotebook', { name }))) {
       deleteNotebook(id);
       navigate({ type: 'all' });
     }
@@ -88,7 +90,7 @@ export default function Sidebar() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          New Notebook
+          {t('newNotebook')}
         </button>
       </div>
 
@@ -102,7 +104,7 @@ export default function Sidebar() {
           <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <span className="flex-1">All Notes</span>
+          <span className="flex-1">{t('allNotes')}</span>
           <span className="text-xs text-gray-400 dark:text-gray-500">
             {notebooks.reduce((sum, nb) => sum + getNotebookNoteCount(nb.id), 0)}
           </span>
@@ -111,7 +113,7 @@ export default function Sidebar() {
         {/* Notebooks */}
         <div className="pt-2">
           <p className="px-3 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">
-            Notebooks
+            {t('notebooks')}
           </p>
           {notebooks.map(notebook => (
             <div key={notebook.id} className="group relative">
@@ -150,7 +152,7 @@ export default function Sidebar() {
                 <button
                   onClick={(e) => { e.stopPropagation(); startRename(notebook.id, notebook.name); }}
                   className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded"
-                  title="Rename"
+                  title={t('rename')}
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -159,7 +161,7 @@ export default function Sidebar() {
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDeleteNotebook(notebook.id, notebook.name); }}
                   className="p-1 text-gray-400 hover:text-red-500 rounded"
-                  title="Delete"
+                  title={t('delete')}
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -186,7 +188,7 @@ export default function Sidebar() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-              Tags
+              {t('tags')}
             </button>
             {tagsExpanded && (
               <div className="mt-1 space-y-0.5">
@@ -216,7 +218,7 @@ export default function Sidebar() {
           <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
-          <span className="flex-1">Trash</span>
+          <span className="flex-1">{t('trash')}</span>
           {trashCount > 0 && (
             <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-1.5 py-0.5 rounded-full">
               {trashCount}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -117,6 +118,7 @@ interface TagInputProps {
 }
 
 function TagInput({ tags, onChange, readOnly }: TagInputProps) {
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState('');
 
   const addTag = (value: string) => {
@@ -168,7 +170,7 @@ function TagInput({ tags, onChange, readOnly }: TagInputProps) {
             }
           }}
           onBlur={() => { if (inputValue.trim()) addTag(inputValue); }}
-          placeholder={tags.length === 0 ? 'Add tags...' : ''}
+          placeholder={tags.length === 0 ? t('addTags') : ''}
           className="outline-none bg-transparent text-sm text-gray-700 dark:text-gray-300 placeholder-gray-400 min-w-[80px] flex-1"
         />
       )}
@@ -181,6 +183,7 @@ interface ExportMenuProps {
 }
 
 function ExportMenu({ note }: ExportMenuProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -193,7 +196,7 @@ function ExportMenu({ note }: ExportMenuProps) {
   }, []);
 
   const exportAs = (type: 'md' | 'txt') => {
-    const title = note.title || 'Untitled';
+    const title = note.title || t('untitled');
     if (type === 'md') {
       const md = `# ${title}\n\n${htmlToMarkdown(note.content)}`;
       downloadFile(md, `${title}.md`, 'text/markdown');
@@ -213,15 +216,15 @@ function ExportMenu({ note }: ExportMenuProps) {
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
         </svg>
-        Export
+        {t('export')}
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-10 min-w-[140px]">
           <button onClick={() => exportAs('md')} className="w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-            Export as Markdown
+            {t('exportMarkdown')}
           </button>
           <button onClick={() => exportAs('txt')} className="w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-            Export as Plain Text
+            {t('exportPlainText')}
           </button>
         </div>
       )}
@@ -230,6 +233,7 @@ function ExportMenu({ note }: ExportMenuProps) {
 }
 
 export default function Editor() {
+  const { t } = useTranslation();
   const selectedNoteId = useNotesStore(s => s.selectedNoteId);
   const notes = useNotesStore(s => s.notes);
   const updateNote = useNotesStore(s => s.updateNote);
@@ -249,7 +253,7 @@ export default function Editor() {
       CodeBlock,
       Highlight,
       Placeholder.configure({
-        placeholder: 'Start writing your note...',
+        placeholder: t('editorPlaceholder'),
       }),
     ],
     content: note?.content ?? '',
@@ -293,8 +297,8 @@ export default function Editor() {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-white dark:bg-gray-900 text-center px-8">
         <span className="text-6xl mb-4">📝</span>
-        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No note selected</h2>
-        <p className="text-gray-400 dark:text-gray-500 text-sm">Select a note from the list or create a new one</p>
+        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('noNoteSelectedTitle')}</h2>
+        <p className="text-gray-400 dark:text-gray-500 text-sm">{t('noNoteSelectedSubtitle')}</p>
       </div>
     );
   }
@@ -312,7 +316,7 @@ export default function Editor() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          This note is in the Trash. Restore it to edit.
+          {t('trashNotice')}
         </div>
       )}
 
@@ -322,7 +326,7 @@ export default function Editor() {
           type="text"
           value={title}
           onChange={e => handleTitleChange(e.target.value)}
-          placeholder="Note title"
+          placeholder={t('noteTitlePlaceholder')}
           disabled={isTrash}
           className="w-full text-2xl font-bold text-gray-900 dark:text-white bg-transparent border-none outline-none placeholder-gray-300 dark:placeholder-gray-600 disabled:opacity-60"
         />
@@ -349,9 +353,9 @@ export default function Editor() {
       {/* Footer */}
       <div className="flex items-center justify-between px-4 py-2 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
         <div className="text-xs text-gray-400 dark:text-gray-500 space-x-3">
-          <span>Created {format(new Date(note.createdAt), 'MMM d, yyyy')}</span>
+          <span>{t('created', { date: format(new Date(note.createdAt), 'MMM d, yyyy') })}</span>
           <span>·</span>
-          <span>Updated {format(new Date(note.updatedAt), 'MMM d, yyyy HH:mm')}</span>
+          <span>{t('updated', { date: format(new Date(note.updatedAt), 'MMM d, yyyy HH:mm') })}</span>
         </div>
         {!isTrash && <ExportMenu note={note} />}
         {isTrash && (
@@ -359,7 +363,7 @@ export default function Editor() {
             onClick={() => deleteNote(note.id)}
             className="text-xs text-red-500 hover:text-red-600"
           >
-            Delete permanently
+            {t('deletePermanently')}
           </button>
         )}
       </div>

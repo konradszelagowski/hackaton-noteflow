@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import type { Note } from '../types';
 import useNotesStore from '../store/useNotesStore';
 
@@ -18,6 +19,7 @@ function highlightText(text: string, query: string): React.ReactNode {
 }
 
 export default function NoteList() {
+  const { t } = useTranslation();
   const currentView = useNotesStore(s => s.currentView);
   const selectedNoteId = useNotesStore(s => s.selectedNoteId);
   const searchQuery = useNotesStore(s => s.searchQuery);
@@ -40,15 +42,15 @@ export default function NoteList() {
   };
 
   const getTitle = () => {
-    if (searchQuery) return `Search: "${searchQuery}"`;
-    if (currentView.type === 'all') return 'All Notes';
+    if (searchQuery) return t('searchResultTitle', { query: searchQuery });
+    if (currentView.type === 'all') return t('allNotes');
     if (currentView.type === 'notebook') {
       const nb = notebooks.find(n => n.id === currentView.notebookId);
-      return nb?.name ?? 'Notebook';
+      return nb?.name ?? t('notebook');
     }
     if (currentView.type === 'tag') return `#${currentView.tag}`;
-    if (currentView.type === 'trash') return 'Trash';
-    return 'Notes';
+    if (currentView.type === 'trash') return t('trash');
+    return t('notes');
   };
 
   return (
@@ -60,7 +62,7 @@ export default function NoteList() {
           <button
             onClick={handleNewNote}
             className="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-lg transition-colors"
-            title="New Note (Ctrl+N)"
+            title={t('newNote')}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -87,7 +89,7 @@ export default function NoteList() {
                 onDelete={() => deleteNote(note.id)}
                 onRestore={() => restoreNote(note.id)}
                 onPermanentDelete={() => {
-                  if (confirm('Permanently delete this note? This cannot be undone.')) {
+                  if (confirm(t('confirmDeleteNotePermanently'))) {
                     permanentlyDeleteNote(note.id);
                   }
                 }}
@@ -113,6 +115,7 @@ interface NoteCardProps {
 }
 
 function NoteCard({ note, isSelected, searchQuery, isTrash, onSelect, onPin, onDelete, onRestore, onPermanentDelete }: NoteCardProps) {
+  const { t } = useTranslation();
   const preview = stripHtml(note.content).slice(0, 100);
 
   return (
@@ -135,7 +138,7 @@ function NoteCard({ note, isSelected, searchQuery, isTrash, onSelect, onPin, onD
 
       <div className="pr-6">
         <h3 className="font-medium text-sm text-gray-900 dark:text-white truncate mb-1">
-          {highlightText(note.title || 'Untitled', searchQuery)}
+          {highlightText(note.title || t('untitled'), searchQuery)}
         </h3>
         {preview && (
           <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-2">
@@ -168,7 +171,7 @@ function NoteCard({ note, isSelected, searchQuery, isTrash, onSelect, onPin, onD
             <button
               onClick={(e) => { e.stopPropagation(); onRestore(); }}
               className="p-1 text-gray-400 hover:text-green-500 rounded transition-colors"
-              title="Restore"
+              title={t('restore')}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -177,7 +180,7 @@ function NoteCard({ note, isSelected, searchQuery, isTrash, onSelect, onPin, onD
             <button
               onClick={(e) => { e.stopPropagation(); onPermanentDelete(); }}
               className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
-              title="Delete permanently"
+              title={t('deletePermanently')}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -189,7 +192,7 @@ function NoteCard({ note, isSelected, searchQuery, isTrash, onSelect, onPin, onD
             <button
               onClick={(e) => { e.stopPropagation(); onPin(); }}
               className={`p-1 rounded transition-colors ${note.pinned ? 'text-indigo-500' : 'text-gray-400 hover:text-indigo-500'}`}
-              title={note.pinned ? 'Unpin' : 'Pin'}
+              title={note.pinned ? t('unpinNote') : t('pinNote')}
             >
               <svg className="w-3.5 h-3.5" fill={note.pinned ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
@@ -198,7 +201,7 @@ function NoteCard({ note, isSelected, searchQuery, isTrash, onSelect, onPin, onD
             <button
               onClick={(e) => { e.stopPropagation(); onDelete(); }}
               className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
-              title="Move to Trash"
+              title={t('moveToTrash')}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -212,32 +215,34 @@ function NoteCard({ note, isSelected, searchQuery, isTrash, onSelect, onPin, onD
 }
 
 function EmptyState({ isTrash, isSearch, onCreateNote }: { isTrash: boolean; isSearch: boolean; onCreateNote: () => void }) {
+  const { t } = useTranslation();
+
   if (isTrash) return (
     <div className="flex flex-col items-center justify-center h-full py-16 px-6 text-center">
       <span className="text-5xl mb-4">🗑️</span>
-      <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Trash is empty</h3>
-      <p className="text-sm text-gray-400 dark:text-gray-500">Deleted notes will appear here</p>
+      <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2">{t('trashEmptyTitle')}</h3>
+      <p className="text-sm text-gray-400 dark:text-gray-500">{t('trashEmptySubtitle')}</p>
     </div>
   );
 
   if (isSearch) return (
     <div className="flex flex-col items-center justify-center h-full py-16 px-6 text-center">
       <span className="text-5xl mb-4">🔍</span>
-      <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2">No results found</h3>
-      <p className="text-sm text-gray-400 dark:text-gray-500">Try different keywords</p>
+      <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2">{t('noResultsTitle')}</h3>
+      <p className="text-sm text-gray-400 dark:text-gray-500">{t('noResultsSubtitle')}</p>
     </div>
   );
 
   return (
     <div className="flex flex-col items-center justify-center h-full py-16 px-6 text-center">
       <span className="text-5xl mb-4">📝</span>
-      <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2">No notes yet</h3>
-      <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">Create your first note to get started</p>
+      <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2">{t('noNotesTitle')}</h3>
+      <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">{t('noNotesSubtitle')}</p>
       <button
         onClick={onCreateNote}
         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
       >
-        New Note
+        {t('newNote')}
       </button>
     </div>
   );
